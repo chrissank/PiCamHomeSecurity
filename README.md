@@ -2,3 +2,36 @@
 A home security system: with raspberry pi cameras!
 
 ![image](https://user-images.githubusercontent.com/5505109/155824662-026c2310-73db-4dbe-9396-25f5bb53cfce.png)
+
+TODO:
+
+- Per-camera rotation, gamma, etc. adjustment
+- Mosaic mode
+    - Tile n number of mpv instances (where n is the number of cameras), each positioned correctly (possibly in a subwindow?), able to refresh
+- 'Add camera' functionality
+    - Add to cameras, save to config.json
+- Documentation
+    - How to setup? maybe, idk
+- Better picam_setup.sh
+    - Storage level? higher = keep files for longer, give estimation in days per / 16gb (e.g. can store 3 days per 16 gb, therefore delete if over 1.5 day old or something
+
+FAR TODO:
+
+- Establish communication with the pis
+    - SSH control = change the service, delete files, etc?
+    - How to get IP of pis?
+
+- Motion detection
+    - Detection done via server, on each mpv stream (can be captured more than once?)
+    - "log" of events, detections, on the server, viewable on a dashboard
+
+- Server-centric mode
+    - For low-power or low-storage pi's
+    - Save the stream from MPV onto the server drive as well
+
+
+Security Features:
+
+- Move cams, server, onto separate wifi network
+- Disconnect new network from internet
+- Restrict # of connections to the network (only x number of cams, computer, etc.)
