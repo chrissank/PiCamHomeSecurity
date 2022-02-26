@@ -5,8 +5,7 @@ console.log("Starting PiCamHome Server");
 const inquirer = require('inquirer');
 const mpvAPI = require('node-mpv');
 const fs = require('fs')
-// where you want to initialise the API
-const mpv = new mpvAPI({}, ["--no-cache", "--untimed", "--no-demuxer-thread", "--ontop", "--no-border", "--geometry=50%x50%"]);
+const mpv = new mpvAPI({}, ["--no-cache", "--untimed", "--no-demuxer-thread", "--no-border", "--geometry=50%x50%"]);
 
 var running = true;
 
@@ -28,51 +27,53 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 console.log("PICamHome Started");
 console.log("\n");
+
+// Main
 async function main() {
-    while(running) {
+  while(running) {
 
-      let action = (await inquirer.prompt(
-        {
-          prefix: '',
-          type: 'list',
-          name: 'action',
-          message: 'What would you like to do?',
-          choices: choices,
-        },
-      )).action;
+    let action = (await inquirer.prompt(
+      {
+        prefix: '',
+        type: 'list',
+        name: 'action',
+        message: 'What would you like to do?',
+        choices: choices,
+      },
+    )).action;
 
-      console.log("\n");
-      if(action.startsWith("V")) {
+    console.log("\n");
+    if(action.startsWith("V")) {
 
-          cam = cameras[choices.indexOf(action)];
-          try {
-            await mpv.start()
-            await mpv.load('udp://192.168.0.11:' + cam.port);
+        cam = cameras[choices.indexOf(action)];
 
+        try {
+          await mpv.start();
 
-            await inquirer.prompt({
-              prefix: '',
-              name: 'action',
-              message: 'Hit enter to continue',
-            })
+          await mpv.load('udp://192.168.0.11:' + cam.port);
 
-            await mpv.quit();
-            // File is playing!
-          } catch (error) {
-            console.log(error);
-          }
+          await inquirer.prompt({
+            prefix: '',
+            name: 'action',
+            message: 'Hit enter to continue',
+          });
 
-          await delay(1000);
-      } else if(action.startsWith("A")) {
-        console.log("\n");
-        console.log("To add a new camera, edit the code. Thanks!");
-        console.log("\n");
+          await mpv.quit();
+        } catch (error) {
+          console.log(error);
+        }
 
-        await delay(1000);
-      } else {
-        running = false;
-      }
+    } else if(action.startsWith("A")) {
+      console.log("To add a new camera, edit the cameras.json file. Thanks!");
+    } else {
+      console.log("Goodbye!");
+      console.log("As a reminder, all cameras will continue running even with this program closed (as long as they are powered on). To reconnect, simply re-open.");
+      running = false;
+      await delay(7000);
     }
+    console.log("\n");
+    await delay(1000);
+  }
 }
 
 main();
