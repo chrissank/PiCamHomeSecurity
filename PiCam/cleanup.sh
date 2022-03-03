@@ -1,1 +1,1 @@
-find home/pi/Documents/PiCam/ -name "*.h264" -type f -mtime +1 -delete
+find home/pi/Documents/PiCam/ -name "*.h264" -type f -mtime +0 -delete
