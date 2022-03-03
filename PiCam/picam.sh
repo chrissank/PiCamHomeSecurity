@@ -4,10 +4,10 @@
 NOW=$(date +'%Y-%m-%dT%H:%M:%S')
 
 # "IPv4 address:PORT" of the computer to stream to e.g. FULLIP="192.168.0.100:5000"
-FULLIP="192.168.0.11:5000"
+FULLIP="192.168.0.16:5000"
 
 # Sample video name: picam-06-05T16:07:49.h264
-VIDEO_FILE="/home/pi/Documents/PiCam/picam-$NOW.h264"
+VIDEO_FILE="/home/pi/Documents/PiCam/footage/picam-$NOW.h264"
 
 # raspivid = command to start the video
 # -t 0 = sets the video duration to infinite
