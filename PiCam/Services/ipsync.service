@@ -1,11 +1,11 @@
 [Unit]
-Description="PiCamHome PiCam automatic footage recording service"
+Description="PiCamHome IPSync automatic server IP sync"
 Wants=network-online.target
 After=network-online.target
 
 [Service]
-ExecStart=/home/pi/Documents/PiCam/picam.sh
-WorkingDirectory=/home/pi/Documents/PiCam
+ExecStart=/home/pi/Documents/PiCamHome/PiCam/picam.sh
+WorkingDirectory=/home/pi/Documents/PiCamHome/PiCam
 StandardOutput=inherit
 StandardError=inherit
 Restart=on-failure
