@@ -2,6 +2,9 @@ var dgram = require("dgram");
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
+var PORT = 6066;
+var MULTICAST_ADDR = "255.255.255.255";
+
 async function main() {
     console.clear();
 
@@ -24,18 +27,11 @@ async function main() {
 
     try {
         await updateAddresses();
-        await delay(250);
-    } catch(err) {
-        console.log("ERROR. AN ERROR HAS OCCURED.");
-
-        console.log("\n");
-        console.log(err);
-        console.log("\n");
-
-        console.log("PROGRAM ATTEMPTING TO CONTINUE... IF CAMERAS DO NOT WORK CONTACT HELP");
-
+    } catch(error) {
         socket = false;
     }
+
+    await delay(250);
 
     if(socket) {
         console.log("Socket broadcast sent. ")
@@ -86,7 +82,7 @@ async function main() {
                 await inquirer.prompt({
                     prefix: '',
                     name: 'action',
-                    message: 'Hit enter to continue',
+                    message: 'To close the stream, hit enter.',
                 });
 
                 await mpv.quit();
@@ -96,6 +92,7 @@ async function main() {
 
         } else if (action.startsWith("A")) {
             console.log("To add a new camera, edit the cameras.json file. Thanks!");
+            await updateAddresses();
         } else {
             console.log("Goodbye!");
             console.log("As a reminder, all cameras will continue running even with this program closed (as long as they are powered on). To reconnect, simply re-open.");
@@ -106,32 +103,34 @@ async function main() {
         if(running) {
             console.log("\n");
             await delay(1000);
-
-            try {
-                await updateAddresses();
-            } catch(err) {
-                console.log("ERROR. AN ERROR HAS OCCURED.");
-
-                console.log("\n");
-                console.log(err);
-                console.log("\n");
-
-                console.log("PROGRAM ATTEMPTING TO CONTINUE... IF CAMERAS DO NOT WORK CONTACT HELP");
-            }
         }
     }
 }
 
 async function updateAddresses() {
-    var socket = dgram.createSocket("udp4");
-    socket.bind(function() {
-        socket.setBroadcast(true);
-    });
+    try {
+        server = dgram.createSocket({type: "udp4", reuseAdr: true});
 
-    var message = new Buffer.alloc(8, "password");
-    socket.send(message, 0, message.length, 5099, '255.255.255.255', function(err, bytes) {
-        socket.close();
-    });
+        message = new Buffer.alloc(8, "password");
+
+        server.bind(async function() {
+            server.setBroadcast(true);
+            for(i = 0; i < 10; i++) {
+                await server.send(message, 0, message.length, PORT, MULTICAST_ADDR, () => {});
+                await delay(100);
+            }
+
+            server.close();
+        });
+
+    } catch(err) {
+        console.log("ERROR:");
+        console.log(err);
+        console.log("\n");
+
+        console.log("PROGRAM ATTEMPTING TO CONTINUE... IF CAMERAS DO NOT WORK CONTACT HELP");
+    }
+
 }
 
 main();
