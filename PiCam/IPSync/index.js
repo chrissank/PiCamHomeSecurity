@@ -55,7 +55,7 @@ server.bind(PORT, BROADCAST_ADDRESS, function() {
 });
 
 function updateFiles(address) {
-    const directory = '/home/pi/Documents/PiCamHome/PiCam' + path.sep;
+    const directory = '/home/pi/Documents/PiCamHomeSecurity/PiCam' + path.sep;
 
     var files = fs.readdirSync(directory).filter(fn => fn.endsWith('-ip'));
 

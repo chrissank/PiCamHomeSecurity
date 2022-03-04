@@ -3,7 +3,7 @@
 # Get the date
 NOW=$(date +'%Y-%m-%dT%H:%M:%S')
 
-cd '/home/pi/Documents/PiCamHome/PiCam/'
+cd '/home/pi/Documents/PiCamHomeSecurity/PiCam/'
 
 # IPv4 address of the computer to stream to e.g. IP="192.168.0.100"
 ipfile=`ls *-ip`
@@ -16,7 +16,7 @@ done
 PORT=5000
 
 # Sample video name: picam-06-05T16:07:49.h264
-VIDEO_FILE="/home/pi/Documents/PiCamHome/PiCam/footage/picam-$NOW.h264"
+VIDEO_FILE="/home/pi/Documents/PiCamHomeSecurity/PiCam/footage/picam-$NOW.h264"
 
 # raspivid = command to start the video
 # -t 0 = sets the video duration to infinite

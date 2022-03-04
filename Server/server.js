@@ -82,7 +82,7 @@ async function main() {
                 await inquirer.prompt({
                     prefix: '',
                     name: 'action',
-                    message: 'To close the stream, hit enter.',
+                    message: 'To close the stream, hit enter. Please, do not close the stream with the program.',
                 });
 
                 await mpv.quit();

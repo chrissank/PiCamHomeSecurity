@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "dgram": "^1.0.1",
-    "inquirer": "^8.2.0"
+    "inquirer": "^8.2.0",
+    "node-mpv": "github:j-holub/Node-MPV"
   }
 }

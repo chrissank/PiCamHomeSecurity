@@ -104,3 +104,9 @@ dist
 .tern-port
 
 index-*
+
+server-*
+
+PiCam/footage/
+
+*-ip
