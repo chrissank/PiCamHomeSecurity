@@ -1,14 +1,12 @@
 console.clear();
 
 var dgram = require("dgram");
-var path = require("path");
 var fs = require("fs");
 const {exec} = require("child_process");
 
-var MULTICAST_ADDRESS = "255.255.255.255";
 var BROADCAST_ADDRESS = "0.0.0.0";
 var PORT = 6066;
-var timeSinceUpdate = 0;
+const configDirectory = "/home/pi/Documents/PiCamHomeSecurityConfig";
 
 server = dgram.createSocket({
     type: "udp4",
@@ -24,12 +22,22 @@ server.on("message", (message, info) => {
     if (message + "" === "password") {
         console.log("PASSWORD RECEIVED FROM " + info.address);
 
-        console.log("CHECK IF UPDATE NEEDED");
-        var isIpTheSame = checkAndUpdateFiles(info.address);
+        let ipIsSame = true;
+        try {
+            const data = fs.readFileSync(`${configDirectory}/ip.dat`, "utf8");
+            if (data !== info.address) {
+                ipIsSame = false;
+            }
+        } catch (err) {
+            ipIsSame = false;
+        }
 
-        if (isIpTheSame) {
+        if (ipIsSame) {
             console.log("ALREADY STREAMING TO THAT ADDRESS. NOT RESTARTING PICAM SERVICE");
         } else {
+            console.log("UPDATING IP FILE");
+            updateIpFile(info.address);
+
             console.log("RESTARTING PICAM SERVICE");
 
             exec("sudo service picam restart", (error, stdout, stderr) => {
@@ -54,38 +62,16 @@ server.on("close", err => {
 });
 
 server.bind(PORT, BROADCAST_ADDRESS, function () {
-    server.addMembership(MULTICAST_ADDRESS);
     server.setBroadcast(true);
 });
 
-function checkAndUpdateFiles(address) {
-    const directory = "/home/pi/Documents/PiCamHomeSecurity/PiCam" + path.sep;
-
-    var files = fs.readdirSync(directory).filter(fn => fn.endsWith("-ip"));
-
-    // delete old "ip-<addr>"" file used to identify what IP the camera's should stream to used by the picam.sh script
-
-    if (!files[0].startsWith(address)) {
-        console.log("OLD IP FILE DETECTED");
-        try {
-            fs.unlinkSync(directory + files[0]);
-            console.log("DELETED OLD IP FILE");
-            //file removed
-        } catch (err) {
-            console.error(err);
-        }
-
-        // create the new "ip-<addr>" file
-        try {
-            fs.writeFile(directory + address + "-ip", "-", function (err) {
-                if (err) throw err;
-                console.log("CREATED NEW IP FILE");
-            });
-        } catch (err) {
-            console.error(err);
-        }
-        return true;
-    } else {
-        return false;
+function updateIpFile(newAddress) {
+    try {
+        fs.writeFileSync(`${configDirectory}/ip.dat`, newAddress, function (err) {
+            if (err) throw err;
+            console.log("CREATED NEW IP FILE");
+        });
+    } catch (err) {
+        console.error(err);
     }
 }

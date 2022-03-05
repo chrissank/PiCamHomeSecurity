@@ -1,4 +1,8 @@
 var dgram = require("dgram");
+var ip = require("ip");
+const inquirer = require("inquirer");
+const mpvAPI = require("node-mpv");
+const fs = require("fs");
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -7,23 +11,18 @@ var MULTICAST_ADDR = "255.255.255.255";
 
 async function main() {
     console.clear();
-
     console.log("Starting PiCamHomeSecurity Server");
 
+    // Add delay between logs so it's more visually appealing
     await delay(100);
 
-    const inquirer = require("inquirer");
-    const mpvAPI = require("node-mpv");
-    const fs = require("fs");
     const mpv = new mpvAPI({}, ["--no-cache", "--untimed", "--no-demuxer-thread", "--no-border", "--geometry=50%x50%"]);
-
     var running = true;
+    let socket = true;
 
     console.log("Initializing socket connection...");
 
     await delay(100);
-
-    let socket = true;
 
     try {
         await updateAddresses();
@@ -40,10 +39,15 @@ async function main() {
 
     console.log("Loading Cameras...");
     await delay(100);
-    console.log("Looking for cameras.json file in directory...");
+    console.log("Looking for cameras.json file in the config directory...");
     await delay(250);
 
-    var cameras = JSON.parse(fs.readFileSync("./cameras.json"));
+    var cameras = [];
+    try {
+        cameras = JSON.parse(fs.readFileSync("../../PiCamHomeSecurityConfig/cameras.json"));
+    } catch (error) {
+        console.log("Error countered. PiCamHomeSecurityConfig/cameras.json is missing.");
+    }
 
     console.log("Loaded " + cameras.length + " cameras from file");
     await delay(300);
@@ -80,7 +84,7 @@ async function main() {
 
                 await mpv.rotateVideo(cam.rotation);
 
-                await mpv.load("udp://192.168.0.11:" + cam.port);
+                await mpv.load(`udp://${ip.address()}:${cam.port}`);
 
                 await inquirer.prompt({
                     prefix: "",
@@ -121,7 +125,7 @@ async function updateAddresses() {
 
         server.bind(async function () {
             server.setBroadcast(true);
-            for (i = 0; i < 10; i++) {
+            for (i = 0; i < 5; i++) {
                 await server.send(message, 0, message.length, PORT, MULTICAST_ADDR, () => {});
                 await delay(100);
             }

@@ -1,16 +1,17 @@
 {
-  "name": "picamhomeserver",
-  "version": "1.0.0",
-  "description": "PiCamHomeServer",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Chris Sankey",
-  "license": "ISC",
-  "dependencies": {
-    "dgram": "^1.0.1",
-    "inquirer": "^8.2.0",
-    "node-mpv": "github:j-holub/Node-MPV"
-  }
+    "name": "picamhomeserver",
+    "version": "1.0.0",
+    "description": "PiCamHomeServer",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Chris Sankey",
+    "license": "MIT",
+    "dependencies": {
+        "dgram": "^1.0.1",
+        "inquirer": "^8.2.0",
+        "ip": "^1.1.5",
+        "node-mpv": "github:j-holub/Node-MPV"
+    }
 }

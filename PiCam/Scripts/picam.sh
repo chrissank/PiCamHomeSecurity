@@ -3,22 +3,17 @@
 # Get the date
 NOW=$(date +'%Y-%m-%dT%H:%M:%S')
 
-cd '/home/pi/Documents/PiCamHomeSecurity/PiCam/'
-
 # IPv4 address of the computer to stream to e.g. IP="192.168.0.100"
-ipfile=`ls *-ip`
-for eachfile in $ipfile
-do
-   IP=${eachfile::-3}
-done
+IP=`cat /home/pi/Documents/PiCamHomeSecurityConfig/ip.dat`
 
 # Port on the computer to stream to
-PORT=5000
+PORT=`cat /home/pi/Documents/PiCamHomeSecurityConfig/port.dat`
 
 # Sample video name: picam-06-05T16:07:49.h264
-VIDEO_FILE="/home/pi/Documents/PiCamFootage/picam-$NOW.h264"
+VIDEO_FILE="/home/pi/Documents/PiCamHomeSecurityFootage/picam-$NOW.h264"
 
-ADDITIONAL_SETTINGS=""
+# Camera specific settings such as rotation, gamma, saturation, etc., as received from the config
+ADDITIONAL_SETTINGS=`cat /home/pi/Documents/PiCamHomeSecurityConfig/camera_settings.dat`
 
 # raspivid = command to start the video
 # -t 0 = sets the video duration to infinite
@@ -34,7 +29,8 @@ ADDITIONAL_SETTINGS=""
 # udp://$IP:PORT = output URL for the UDP stream
 # SOMETIMES:
 #    - vf, hf = vertical or horizontal flip
-#    - rot = rotation
-raspivid -t 0 -w 1920 -h 1080 -a 12 -fps 30 -br 65 -b 6000000 $ADDITIONAL_SETTINGS -ih -o - | tee $VIDEO_FILE | ffmpeg -thread_queue_size 4096 -i - -f lavfi -i anullsrc -c:v copy -f h264 udp://$IP:$PORT
+#    - rot = rotation (0-360deg)
+#    - br = brightness (0-100, for night viewing)
+raspivid -t 0 -w 1920 -h 1080 -a 12 -fps 30 -b 6000000 $ADDITIONAL_SETTINGS -ih -o - | tee $VIDEO_FILE | ffmpeg -thread_queue_size 4096 -i - -f lavfi -i anullsrc -c:v copy -f h264 udp://$IP:$PORT
 
 #end

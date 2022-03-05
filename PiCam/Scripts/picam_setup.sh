@@ -2,51 +2,60 @@
 
 cd ../..
 
-mkdir PiCamFootage
+mkdir PiCamHomeSecurityFootage
+mkdir PiCamHomeSecurityConfig
 
-cd PiCamHomeSecurity/PiCam/IPSync
-
-npm install
-
-cd ..
+cd PiCamHomeSecurityConfig
 
 read -p "Enter IP of server: " ip
+echo $ip > ip.dat
+
 read -p "Enter the PORT you are streaming to on the server: " port
-read -p "Vertical flip? (y/n) " vflip
-read -p "Horizontal flip? (y/n) " hflip
+echo $port > port.dat
+
+read -p "Vertical flip? (y/n) " wantVFlip
+read -p "Horizontal flip? (y/n) " wantHFlip
 read -p "Rotation? (deg) " rotation
+read -p "Turn brightness up at night? (y/n) " wantNightBright
 
-VF=""
-HF=""
-ROT=""
-if [ "$vflip" = "y" ]; then
-    VF="-vf"
+if [ "$wantNightBright" = "y" ]; then
+    read -p "Brightness 0-100% (60 recommended): " nightBrightness
 fi
 
-ADDITIONAL_SETTINGS="$VF"
+CAMERA_SETTINGS=""
 
-if [ "$hflip" = "y" ]; then
-    HF="-hf"
+if [ "$wantVFlip" = "y" ]; then
+    CAMERA_SETTINGS="$CAMERA_SETTINGS -vf"
 fi
 
-ADDITIONAL_SETTINGS="$ADDITIONAL_SETTINGS $HF -rot $rotation"
+if [ "$wantHFlip" = "y" ]; then
+    CAMERA_SETTINGS="$CAMERA_SETTINGS -hf"
+fi
 
-echo $ADDITIONAL_SETTINGS
+CAMERA_SETTINGS="$CAMERA_SETTINGS $HF -rot $rotation"
 
-sed -i "16s/.*/PORT=\"${port}\"/" Scripts/picam.sh
+echo $CAMERA_SETTINGS > camera_settings.dat
 
-sed -i "21s/.*/ADDITIONAL_SETTINGS=\"${ADDITIONAL_SETTINGS}\"/" Scripts/picam.sh
+NIGHT_SETTINGS="$CAMERA_SETTINGS -br $nightBrightness"
 
-chmod u+x Scripts/picam.sh
-chmod u+x Scripts/cleanup.sh
-sudo cp Services/picam.service /etc/systemd/system/
-sudo cp Services/ipsync.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable picam.service
-sudo systemctl enable ipsync.service
+echo $NIGHT_SETTINGS > night_settings.dat
 
-(crontab -l 2>/dev/null; echo "0 1 * * * /home/pi/Documents/PiCamHomeSecurity/PiCam/Scripts/cleanup.sh") | crontab -
+# cd ../PiCamHomeSecurity/PiCam/IPSync
 
-echo "Setup complete. Reboot to enable."
+# npm install
+
+# cd ..
+
+# chmod u+x Scripts/picam.sh
+# chmod u+x Scripts/cleanup.sh
+# sudo cp Services/picam.service /etc/systemd/system/
+#sudo cp Services/ipsync.service /etc/systemd/system/
+#sudo systemctl daemon-reload
+#sudo systemctl enable picam.service
+#sudo systemctl enable ipsync.service
+
+#(crontab -l 2>/dev/null; echo "0 1 * * * /home/pi/Documents/PiCamHomeSecurity/PiCam/Scripts/cleanup.sh") | crontab -
+
+#echo "Setup complete. Reboot to get started."
 
 #end
