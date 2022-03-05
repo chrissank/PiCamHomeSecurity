@@ -40,22 +40,22 @@ NIGHT_SETTINGS="$CAMERA_SETTINGS -br $nightBrightness"
 
 echo $NIGHT_SETTINGS > night_settings.dat
 
-# cd ../PiCamHomeSecurity/PiCam/IPSync
+cd ../PiCamHomeSecurity/PiCam/IPSync
 
-# npm install
+npm install
 
-# cd ..
+cd ..
 
-# chmod u+x Scripts/picam.sh
-# chmod u+x Scripts/cleanup.sh
-# sudo cp Services/picam.service /etc/systemd/system/
-#sudo cp Services/ipsync.service /etc/systemd/system/
-#sudo systemctl daemon-reload
-#sudo systemctl enable picam.service
-#sudo systemctl enable ipsync.service
+chmod u+x Scripts/picam.sh
+chmod u+x Scripts/cleanup.sh
+sudo cp Services/picam.service /etc/systemd/system/
+sudo cp Services/ipsync.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable picam.service
+sudo systemctl enable ipsync.service
 
-#(crontab -l 2>/dev/null; echo "0 1 * * * /home/pi/Documents/PiCamHomeSecurity/PiCam/Scripts/cleanup.sh") | crontab -
+(crontab -l 2>/dev/null; echo "0 1 * * * /home/pi/Documents/PiCamHomeSecurity/PiCam/Scripts/cleanup.sh") | crontab -
 
-#echo "Setup complete. Reboot to get started."
+echo "Setup complete. Reboot to get started."
 
 #end
