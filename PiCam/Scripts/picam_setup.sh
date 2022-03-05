@@ -1,17 +1,41 @@
 #!/bin/bash
 
-cd PiCam
+cd ../..
 
-cd IPSync
+mkdir PiCamFootage
 
-node install
+cd PiCamHomeSecurity/PiCam/IPSync
+
+npm install
 
 cd ..
 
 read -p "Enter IP of server: " ip
 read -p "Enter the PORT you are streaming to on the server: " port
+read -p "Vertical flip? (y/n) " vflip
+read -p "Horizontal flip? (y/n) " hflip
+read -p "Rotation? (deg) " rotation
 
-sed -i "14s/.*/PORT=\"${port}\"/" Scripts/picam.sh
+VF=""
+HF=""
+ROT=""
+if [ "$vflip" = "y" ]; then
+    VF="-vf"
+fi
+
+ADDITIONAL_SETTINGS="$VF"
+
+if [ "$hflip" = "y" ]; then
+    HF="-hf"
+fi
+
+ADDITIONAL_SETTINGS="$ADDITIONAL_SETTINGS $HF -rot $rotation"
+
+echo $ADDITIONAL_SETTINGS
+
+sed -i "16s/.*/PORT=\"${port}\"/" Scripts/picam.sh
+
+sed -i "21s/.*/ADDITIONAL_SETTINGS=\"${ADDITIONAL_SETTINGS}\"/" Scripts/picam.sh
 
 chmod u+x Scripts/picam.sh
 chmod u+x Scripts/cleanup.sh
