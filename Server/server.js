@@ -8,14 +8,14 @@ var MULTICAST_ADDR = "255.255.255.255";
 async function main() {
     console.clear();
 
-    console.log("Starting PiCamHome Server");
+    console.log("Starting PiCamHomeSecurity Server");
 
     await delay(100);
 
     const inquirer = require('inquirer');
     const mpvAPI = require('node-mpv');
     const fs = require('fs')
-    const mpv = new mpvAPI({}, ["--no-cache", "--untimed", "--no-demuxer-thread", "--no-border", "--geometry=50%x50%", "--video-rotate=180"]);
+    const mpv = new mpvAPI({}, ["--no-cache", "--untimed", "--no-demuxer-thread", "--no-border", "--geometry=50%x50%"]);
 
     var running = true;
 
@@ -53,9 +53,10 @@ async function main() {
         choices.push("View Camera " + cam.number);
     }
     choices.push("Add camera");
+    choices.push("Sync IP");
     choices.push("Exit");
 
-    console.log("PICamHome Started");
+    console.log("PICamHomeSecurity Started");
     console.log("\n");
 
     // Main program
@@ -77,6 +78,8 @@ async function main() {
             try {
                 await mpv.start();
 
+                await mpv.rotateVideo(cam.rotation);
+
                 await mpv.load('udp://192.168.0.11:' + cam.port);
 
                 await inquirer.prompt({
@@ -92,6 +95,7 @@ async function main() {
 
         } else if (action.startsWith("A")) {
             console.log("To add a new camera, edit the cameras.json file. Thanks!");
+        } else if(action.startsWith("S")) {
             await updateAddresses();
         } else {
             console.log("Goodbye!");
@@ -119,7 +123,6 @@ async function updateAddresses() {
                 await server.send(message, 0, message.length, PORT, MULTICAST_ADDR, () => {});
                 await delay(100);
             }
-
             server.close();
         });
 
