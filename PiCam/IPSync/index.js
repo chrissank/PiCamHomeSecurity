@@ -5,10 +5,11 @@ var path = require('path')
 var fs = require('fs')
 const { exec } = require("child_process");
 
-var MULTICAST_ADDRESS = "239.0.1.2";
+var MULTICAST_ADDRESS = "255.255.255.255";
 var BROADCAST_ADDRESS = "0.0.0.0";
 var PORT = 6066;
 var recent = false;
+var timeSinceUpdate = 0;
 
 server = dgram.createSocket({type: "udp4", reuseAdr: true});
 
@@ -18,23 +19,25 @@ server.on('listening', () => {
 });
 
 server.on('message', (message, info) => {
-    console.log("RECEIVED:\n" + message);
-    console.log("FROM: " + info.address);
-
     if((message + "") === "password" && !recent) {
         recent = true; // we only want to update it once within a short amount of time
-        console.log("PASSWORD RECEIVED");
+        console.log("PASSWORD RECEIVED FROM " + info.address);
         console.log("UPDATING FILE");
 
         updateFiles(info.address);
 
+        console.log("RESTARTING PICAM SERVICE")
+
         exec("sudo service picam restart", (error, stdout, stderr) => {
-            console.log(`stdout: ${stdout}`);
+            console.log(`${stdout}`);
         });
 
         setTimeout(() => {
             recent = false;
         }, 2000);
+    } else if((message + "") !== "password") {
+        console.log("RECEIVED:\n" + message);
+        console.log("FROM: " + info.address);
     }
 });
 
@@ -71,7 +74,7 @@ function updateFiles(address) {
     try {
         fs.writeFile(directory + address + "-ip", "-", function (err) {
             if (err) throw err;
-            console.log('ip file is created successfully.');
+            console.log('Created IP file');
         });
     } catch(err) {
         console.error(err)
