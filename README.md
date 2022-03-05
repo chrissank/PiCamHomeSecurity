@@ -1,11 +1,11 @@
-# PiCamHome
+# PiCamHomeSecurity
 A home security system: with raspberry pi cameras!
 
 ![image](https://user-images.githubusercontent.com/5505109/155824662-026c2310-73db-4dbe-9396-25f5bb53cfce.png)
 
 TODO:
 
-- Per-camera rotation, gamma, etc. adjustment
+- Per-camera video adjustment e.g. gamma, brightness, etc.
 - Mosaic mode
     - Tile n number of mpv instances (where n is the number of cameras), each positioned correctly (possibly in a subwindow?), able to refresh
 - 'Add camera' functionality
@@ -17,10 +17,6 @@ TODO:
 
 FAR TODO:
 
-- Establish communication with the pis
-    - SSH control = change the service, delete files, etc?
-    - How to get IP of pis?
-
 - Motion detection
     - Detection done via server, on each mpv stream (can be captured more than once?)
     - "log" of events, detections, on the server, viewable on a dashboard
@@ -28,7 +24,6 @@ FAR TODO:
 - Server-centric mode
     - For low-power or low-storage pi's
     - Save the stream from MPV onto the server drive as well
-
 
 Security Features:
 
