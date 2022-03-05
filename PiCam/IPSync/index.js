@@ -25,7 +25,7 @@ server.on("message", (message, info) => {
         console.log("PASSWORD RECEIVED FROM " + info.address);
 
         console.log("CHECK IF UPDATE NEEDED");
-        var isIpTheSame = updateFiles(info.address);
+        var isIpTheSame = checkAndUpdateFiles(info.address);
 
         if (isIpTheSame) {
             console.log("ALREADY STREAMING TO THAT ADDRESS. NOT RESTARTING PICAM SERVICE");
@@ -58,7 +58,7 @@ server.bind(PORT, BROADCAST_ADDRESS, function () {
     server.setBroadcast(true);
 });
 
-function updateFiles(address) {
+function checkAndUpdateFiles(address) {
     const directory = "/home/pi/Documents/PiCamHomeSecurity/PiCam" + path.sep;
 
     var files = fs.readdirSync(directory).filter(fn => fn.endsWith("-ip"));
