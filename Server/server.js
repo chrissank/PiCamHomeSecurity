@@ -47,6 +47,12 @@ async function main() {
         cameras = JSON.parse(fs.readFileSync("../../PiCamHomeSecurityConfig/cameras.json"));
     } catch (error) {
         console.log("Error countered. PiCamHomeSecurityConfig/cameras.json is missing.");
+
+        // try to create it, if it fails, who cares, we already notified that the file is missing.
+        try {
+            fs.mkdirSync("../../PiCamHomeSecurityConfig");
+            fs.writeFileSync(`../../PiCamHomeSecurityConfig/cameras.json`, "[]");
+        } catch (error) {}
     }
 
     console.log("Loaded " + cameras.length + " cameras from file");
