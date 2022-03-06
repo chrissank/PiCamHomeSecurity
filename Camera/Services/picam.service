@@ -5,7 +5,7 @@ After=network-online.target
 
 [Service]
 ExecStart=node /home/pi/Documents/PiCamHomeSecurity/Camera/PiCam/index.js
-WorkingDirectory=/home/pi/Documents/PiCamHomeSecurity/Camera/Picam/
+WorkingDirectory=/home/pi/Documents/PiCamHomeSecurity/Camera/PiCam/
 StandardOutput=inherit
 StandardError=inherit
 Restart=on-failure
