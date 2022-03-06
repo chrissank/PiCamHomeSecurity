@@ -1,11 +1,11 @@
 [Unit]
-Description="PiCamHome IPSync automatic server IP sync"
+Description="PiCamHomeSecurity PiCam software service"
 Wants=network-online.target
 After=network-online.target
 
 [Service]
-ExecStart=node /home/pi/Documents/PiCamHomeSecurity/PiCam/IPSync/index.js
-WorkingDirectory=/home/pi/Documents/PiCamHomeSecurity/PiCam/IPSync/
+ExecStart=node /home/pi/Documents/PiCamHomeSecurity/Camera/PiCam/index.js
+WorkingDirectory=/home/pi/Documents/PiCamHomeSecurity/Camera/Picam/
 StandardOutput=inherit
 StandardError=inherit
 Restart=on-failure

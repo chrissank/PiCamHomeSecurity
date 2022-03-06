@@ -1,1 +1,0 @@
-find /home/pi/Documents/PiCamFootage/ -name "*.h264" -type f -mtime +5 -delete

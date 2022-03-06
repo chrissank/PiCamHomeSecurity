@@ -1,0 +1,1 @@
+find /home/pi/Documents/PiCamHomeSecurityFootage/ -name "*.h264" -type f -mtime +5 -delete
