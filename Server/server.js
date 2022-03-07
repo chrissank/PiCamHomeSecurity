@@ -1,13 +1,6 @@
-var dgram = require("dgram");
-var ip = require("ip");
 const inquirer = require("inquirer");
-const mpvAPI = require("node-mpv");
-const fs = require("fs");
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-var PORT = 6066;
-var MULTICAST_ADDR = "255.255.255.255";
 
 async function main() {
     console.clear();
@@ -16,58 +9,16 @@ async function main() {
     // Add delay between logs so it's more visually appealing
     await delay(100);
 
-    const mpv = new mpvAPI({}, ["--no-cache", "--untimed", "--no-demuxer-thread", "--no-border", "--geometry=50%x50%"]);
     var running = true;
-    let socket = true;
 
-    console.log("Initializing socket connection...");
+    console.log("Initializing heartbeat connection...");
+    await require("./managers/heartbeat_manager").sendHeartbeat();
+    console.log("Heartbeats sent");
 
-    await delay(100);
-
-    try {
-        await updateAddresses();
-    } catch (error) {
-        socket = false;
-    }
-
-    await delay(250);
-
-    if (socket) {
-        console.log("Socket broadcast sent");
-        await delay(100);
-    }
-
-    console.log("Loading Cameras...");
-    await delay(100);
-    console.log("Looking for cameras.json file in the config directory...");
-    await delay(250);
-
-    var cameras = [];
-    try {
-        cameras = JSON.parse(fs.readFileSync("../../PiCamHomeSecurityConfig/cameras.json"));
-    } catch (error) {
-        console.log("Error countered. PiCamHomeSecurityConfig/cameras.json is missing.");
-
-        // try to create it, if it fails, who cares, we already notified that the file is missing.
-        try {
-            fs.mkdirSync("../../PiCamHomeSecurityConfig");
-            fs.writeFileSync(`../../PiCamHomeSecurityConfig/cameras.json`, "[]");
-        } catch (error) {}
-    }
-
-    console.log("Loaded " + cameras.length + " cameras from file");
-    await delay(300);
-
-    let choices = [];
-    for (cam of cameras) {
-        choices.push("View Camera " + cam.number);
-    }
-    choices.push("Add camera");
-    choices.push("Sync IP");
-    choices.push("Exit");
+    var c = await getChoices();
 
     console.log("PICamHomeSecurity Started");
-    console.log("\n");
+    console.log("");
 
     // Main program
     while (running) {
@@ -77,73 +28,59 @@ async function main() {
                 type: "list",
                 name: "action",
                 message: "What would you like to do?",
-                choices: choices,
+                choices: c,
             })
         ).action;
 
-        console.log("\n");
+        console.log("");
         if (action.startsWith("V")) {
-            cam = cameras[choices.indexOf(action)];
+            cam = (await require("./managers/camera_manager").getCameras())[c.indexOf(action)];
 
-            try {
-                await mpv.start();
-
-                await mpv.rotateVideo(cam.rotation);
-
-                await mpv.load(`udp://${ip.address()}:${cam.port}`);
-
-                await inquirer.prompt({
-                    prefix: "",
-                    name: "action",
-                    message: "To close the stream, hit enter. Please, do not close the stream with the program",
-                });
-
-                await mpv.quit();
-            } catch (error) {
-                console.log(error);
-            }
+            await require("./managers/mpv_manager").viewCamera(cam);
         } else if (action.startsWith("A")) {
-            console.log("To add a new camera, edit the cameras.json file. Thanks!");
+            await require("./managers/camera_manager").addCamera();
+
+            c = await getChoices();
         } else if (action.startsWith("S")) {
-            await updateAddresses();
+            await require("./managers/heartbeat_manager").sendHeartbeat();
         } else {
             console.log("Goodbye!");
             console.log("As a reminder, all cameras will continue running even with this program closed (as long as they are powered on). To reconnect, simply re-open");
+            await delay(6000);
             running = false;
-            await delay(7000);
         }
 
-        if (running) {
-            console.log("\n");
-            await delay(1000);
-        }
+        console.log("");
+        await delay(1000);
     }
 }
 
-async function updateAddresses() {
-    try {
-        server = dgram.createSocket({
-            type: "udp4",
-            reuseAdr: true,
-        });
+async function getChoices() {
+    console.log("Loading Cameras...");
+    await delay(100);
+    console.log("Looking for cameras.json file in the config directory");
+    await delay(250);
 
-        message = new Buffer.alloc(8, "password");
+    var cameras = await require("./managers/camera_manager").getCameras();
 
-        server.bind(async function () {
-            server.setBroadcast(true);
-            for (i = 0; i < 5; i++) {
-                await server.send(message, 0, message.length, PORT, MULTICAST_ADDR, () => {});
-                await delay(100);
-            }
-            server.close();
-        });
-    } catch (err) {
-        console.log("ERROR:");
-        console.log(err);
-        console.log("\n");
+    console.log("Loaded " + cameras.length + " cameras from file");
+    await delay(300);
 
-        console.log("PROGRAM ATTEMPTING TO CONTINUE... RESTART. IF CAMERAS CONTINUE TO NOT WORK, CONTACT HELP");
+    let choices = [];
+    for (cam of cameras) {
+        let choice = "View ";
+        if (cam.title) {
+            choice += cam.title + " camera";
+        } else {
+            choice += "camera" + cam.number;
+        }
+        choices.push(choice);
     }
+    choices.push("Add camera");
+    choices.push("Sync IP");
+    choices.push("Exit");
+
+    return choices;
 }
 
 main();
