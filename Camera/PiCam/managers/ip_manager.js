@@ -24,7 +24,7 @@ module.exports.sync = async function (newAddress) {
         console.log("[IPSYNC] RESTARTING PICAM SERVICE");
 
         // wait for this command to finish?
-        exec("sudo service picam restart", (error, stdout, stderr) => {
+        exec("sudo service picam-camera restart", (error, stdout, stderr) => {
             console.log(`${stdout}`);
         });
     }
