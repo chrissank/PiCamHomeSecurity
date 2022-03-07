@@ -1,6 +1,6 @@
 const fs = require("fs").promises;
 const inquirer = require("inquirer");
-const configPath = "../../../../PiCamHomeSecurityConfig";
+const configPath = "/home/momserver/Documents/PiCamHomeSecurityConfig";
 const camerasPath = configPath + "/cameras.json";
 const addCameraQuestions = [
     {
