@@ -6,14 +6,16 @@ var BROADCAST_ADDRESS = "0.0.0.0";
 var HEARTBEAT_PORT = 41000;
 var recent = false;
 
-module.exports.createHeartbeatConnection = async function () {
+module.exports.createHeartbeatConnection = function () {
     server = dgram.createSocket({
         type: "udp4",
         reuseAdr: true,
     });
 
     server.on("listening", onListeningStart);
-    server.on("message", async () => onMessage);
+    server.on("message", async function (message, info) {
+        await onMessage(message, info);
+    });
     server.on("error", onError);
     server.on("close", onClose);
 

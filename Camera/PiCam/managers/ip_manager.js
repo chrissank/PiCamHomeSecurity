@@ -5,7 +5,7 @@ const ipFile = "/home/pi/Documents/PiCamHomeSecurityConfig/ip.dat";
 module.exports.sync = async function (newAddress) {
     console.log("[IPSYNC] CHECKING IP STATUS");
 
-    let ipIsSame = (await getServerIp()) !== newAddress;
+    let ipIsSame = (await this.getServerIp()) !== newAddress;
 
     if (ipIsSame) {
         console.log("[IPSYNC] ALREADY STREAMING TO THAT ADDRESS. NOT RESTARTING PICAM SERVICE");
