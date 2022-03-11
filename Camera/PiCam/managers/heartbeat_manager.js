@@ -12,19 +12,18 @@ module.exports.createHeartbeatConnection = function () {
         reuseAdr: true,
     });
 
-    server.on("listening", async function () {
-        server.setBroadcast(true);
-        server.setMulticastTTL(128);
-        server.addMembership(MULTICAST_ADDRESS, ip.address());
-        onListeningStart();
-    });
+    server.on("listening", onListeningStart);
     server.on("message", async function (message, info) {
         await onMessage(message, info);
     });
     server.on("error", onError);
     server.on("close", onClose);
 
-    server.bind(HEARTBEAT_PORT, function () {});
+    server.bind(HEARTBEAT_PORT, function () {
+        server.setBroadcast(true);
+        server.setMulticastTTL(128);
+        server.addMembership(MULTICAST_ADDRESS, ip.address());
+    });
 };
 
 // local functions, no need to export them.
