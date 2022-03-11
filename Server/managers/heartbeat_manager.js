@@ -1,7 +1,8 @@
 var dgram = require("dgram");
+var ip = require("ip");
 
 var HEARTBEAT_PORT = 41000;
-var MULTICAST_ADDR = "255.255.255.255";
+var MULTICAST_ADDRESS = "230.100.101.102";
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 module.exports.sendHeartbeat = async function () {
@@ -16,9 +17,11 @@ module.exports.sendHeartbeat = async function () {
 
             server.bind(async function () {
                 server.setBroadcast(true);
+                server.setMulticastTTL(128);
+                server.addMembership(MULTICAST_ADDRESS, ip.address());
                 for (i = 0; i < 5; i++) {
-                    await server.send(message, 0, message.length, HEARTBEAT_PORT, MULTICAST_ADDR, () => {});
-                    await delay(100);
+                    await server.send(message, 0, message.length, HEARTBEAT_PORT, MULTICAST_ADDRESS, () => {});
+                    await delay(200);
                 }
                 server.close();
                 resolve(); // resolve the promise once each packet is sent

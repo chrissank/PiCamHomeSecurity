@@ -1,9 +1,9 @@
 // Detects UDP heartbeats sent by the PiCamHomeSecurity server
 
 var dgram = require("dgram");
-
-var BROADCAST_ADDRESS = "0.0.0.0";
+var ip = require("ip");
 var HEARTBEAT_PORT = 41000;
+var MULTICAST_ADDRESS = "230.100.101.102";
 var recent = false;
 
 module.exports.createHeartbeatConnection = function () {
@@ -12,16 +12,19 @@ module.exports.createHeartbeatConnection = function () {
         reuseAdr: true,
     });
 
-    server.on("listening", onListeningStart);
+    server.on("listening", async function () {
+        server.setBroadcast(true);
+        server.setMulticastTTL(128);
+        server.addMembership(MULTICAST_ADDRESS, ip.address());
+        onListeningStart();
+    });
     server.on("message", async function (message, info) {
         await onMessage(message, info);
     });
     server.on("error", onError);
     server.on("close", onClose);
 
-    server.bind(HEARTBEAT_PORT, BROADCAST_ADDRESS, function () {
-        server.setBroadcast(true);
-    });
+    server.bind(HEARTBEAT_PORT, function () {});
 };
 
 // local functions, no need to export them.

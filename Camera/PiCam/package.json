@@ -8,5 +8,7 @@
     },
     "author": "Chris Sankey",
     "license": "MIT",
-    "dependencies": {}
+    "dependencies": {
+        "ip": "^1.1.5"
+    }
 }
