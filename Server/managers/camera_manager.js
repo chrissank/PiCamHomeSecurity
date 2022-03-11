@@ -1,27 +1,19 @@
 const fs = require("fs").promises;
 const inquirer = require("inquirer");
-const configPath = "/home/momserver/Documents/PiCamHomeSecurityConfig";
+const configPath = process.cwd() + "../../../PiCamHomeSecurityConfig";
 const camerasPath = configPath + "/cameras.json";
-const addCameraQuestions = [
-    {
-        prefix: "",
-        type: "input",
-        name: "title",
-        message: "What is this camera looking at? (e.g. front yard, driveway) ",
-    },
-    {
-        prefix: "",
-        type: "number",
-        name: "port",
-        message: "What port is the camera streaming to? (e.g. 41100) ",
-    },
-    {
-        prefix: "",
-        type: "number",
-        name: "tcpPort",
-        message: "What port are communications on? (e.g. 41200)",
-    },
-];
+const {Form, Input} = require("enquirer");
+
+const addCameraQuestion = new Form({
+    name: "camera",
+    message: "Please fill in the camera details below:",
+    choices: [
+        {name: "title", message: "Where does this camera view? (e.g. Front yard, back yard)", initial: ""},
+        {name: "udpPort", message: "What port does this camera stream to? (typically 411XX, e.g. 41100)", initial: ""},
+        {name: "tcpPort", message: "What port does this camera communicate on? (typically 412XX, e.g. 41200)", initial: ""},
+    ],
+    prefix: state => "=>",
+});
 
 module.exports.getCameras = async function () {
     var cameras = [];
@@ -39,7 +31,7 @@ module.exports.getCameras = async function () {
 };
 
 module.exports.addCamera = async function () {
-    let newCamera = await inquirer.prompt(addCameraQuestions);
+    let newCamera = await addCameraQuestion.run();
 
     let cameras = await this.getCameras();
     cameras.push(newCamera);

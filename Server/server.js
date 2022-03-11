@@ -24,7 +24,7 @@ async function main() {
     while (running) {
         let action = (
             await inquirer.prompt({
-                prefix: "",
+                prefix: "=>",
                 type: "list",
                 name: "action",
                 message: "What would you like to do?",
