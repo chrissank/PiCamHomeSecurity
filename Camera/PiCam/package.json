@@ -9,6 +9,7 @@
     "author": "Chris Sankey",
     "license": "MIT",
     "dependencies": {
+        "inkjet": "^3.0.0",
         "ip": "^1.1.5"
     }
 }
