@@ -1,6 +1,8 @@
 #!/bin/bash
 
-cd ../..
+DOCUMENTS="/home/pi/Documents/"
+
+cd $DOCUMENTS
 
 mkdir PiCamHomeSecurityFootage
 mkdir PiCamHomeSecurityConfig
@@ -10,8 +12,11 @@ cd PiCamHomeSecurityConfig
 read -p "Enter IP of server: " ip
 echo $ip > ip.dat
 
-read -p "Enter the PORT you are streaming to on the server: " port
-echo $port > port.dat
+read -p "Enter the SERVER port you are STREAMING to (e.g. 411XX): " s_port
+echo $s_port > stream_port.dat
+
+read -p "Enter the SERVER port you are COMMUNICATING through (e.g. 412XX): " c_port
+echo $c_port > communication_port.dat
 
 read -p "Vertical flip? (y/n) " wantVFlip
 read -p "Horizontal flip? (y/n) " wantHFlip
@@ -36,7 +41,7 @@ CAMERA_SETTINGS="$CAMERA_SETTINGS $HF -rot $rotation"
 
 echo $CAMERA_SETTINGS > camera_settings.dat
 
-NIGHT_SETTINGS="$CAMERA_SETTINGS -br $nightBrightness"
+NIGHT_SETTINGS="-br $nightBrightness"
 
 echo $NIGHT_SETTINGS > night_settings.dat
 
