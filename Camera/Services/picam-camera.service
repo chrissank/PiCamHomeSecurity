@@ -4,6 +4,7 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
+ExecStartPre=/bin/sleep 30
 ExecStart=/home/pi/Documents/PiCamHomeSecurity/Camera/Scripts/picam.sh
 WorkingDirectory=/home/pi/Documents/PiCamHomeSecurity/Camera/Scripts
 StandardOutput=inherit
