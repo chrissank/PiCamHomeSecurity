@@ -14,7 +14,7 @@ module.exports.createHeartbeatConnection = function () {
 
     server.on("listening", onListeningStart);
     server.on("message", async function (message, info) {
-        await onMessage(encryption_manager.decrypt(message), info);
+        await onMessage(encryption_manager.decrypt(JSON.parse(message)), info);
     });
     server.on("error", onError);
     server.on("close", onClose);
@@ -34,7 +34,7 @@ async function onListeningStart() {
 }
 
 async function onMessage(message, info) {
-    if (message + "" === "password") {
+    if (message + "" === "sync") {
         if (!recent) {
             recent = true;
             console.log("[HEARTBEAT] DETECTED FROM " + info.address);

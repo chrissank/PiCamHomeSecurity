@@ -14,7 +14,9 @@ module.exports.sendHeartbeat = async function () {
                 reuseAdr: true,
             });
 
-            message = new Buffer.alloc(8, "password");
+            var msgContents = JSON.stringify(encryption_manager.encrypt("sync"));
+
+            message = new Buffer.alloc(msgContents.length, msgContents);
 
             server.bind(async function () {
                 server.setBroadcast(true);
