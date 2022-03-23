@@ -20,13 +20,13 @@ async function main() {
     await require("./managers/heartbeat_manager").sendHeartbeat();
     console.log("Heartbeats sent");
 
-    var choices = [];
+    var options = [];
 
-    choices.push("View camera");
-    choices.push("Download footage");
-    choices.push("Edit cameras");
-    choices.push("Sync IP");
-    choices.push("Exit");
+    options.push("View camera");
+    options.push("Download footage");
+    options.push("Edit cameras");
+    options.push("Sync IP");
+    options.push("Exit");
 
     console.log("PiCamHomeSecurity Started");
     console.log("");
@@ -39,7 +39,7 @@ async function main() {
                 type: "list",
                 name: "action",
                 message: "What would you like to do?",
-                choices: c,
+                choices: options,
             })
         ).action;
 
