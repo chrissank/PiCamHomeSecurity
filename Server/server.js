@@ -59,7 +59,7 @@ async function main() {
             running = false;
         }
 
-        console.log("\n");
+        console.log("");
         await delay(1000);
     }
 }

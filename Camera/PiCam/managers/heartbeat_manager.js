@@ -29,12 +29,12 @@ module.exports.createHeartbeatConnection = function () {
 // local functions, no need to export them.
 async function onListeningStart() {
     const address = server.address();
-    console.log(`HEARTBEAT LISTENER CONNECTED: ${address.address}:${address.port}`);
+    console.log(`[HEARTBEAT] LISTENER CONNECTED: ${address.address}:${address.port}`);
     console.log("\n");
 }
 
 async function onMessage(message, info) {
-    if (message + "" === "sync") {
+    if (message.startsWith("sync")) {
         if (!recent) {
             recent = true;
             console.log("[HEARTBEAT] DETECTED FROM " + info.address);
