@@ -14,12 +14,12 @@ if (password === "") {
     password = "password";
 } else {
 }
-const key = password;
 
 /* Taken from https://www.tutorialspoint.com/encrypt-and-decrypt-data-in-nodejs */
 
 //Encrypting text
 module.exports.encrypt = function (text) {
+    let key = crypto.createHash("sha256").update(password).digest("base64").substring(0, 32);
     const iv = crypto.randomBytes(16);
     let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key), iv);
     let encrypted = cipher.update(text);
@@ -29,6 +29,7 @@ module.exports.encrypt = function (text) {
 
 // Decrypting text
 module.exports.decrypt = function (text) {
+    let key = crypto.createHash("sha256").update(password).digest("base64").substring(0, 32);
     let iv = Buffer.from(text.iv, "hex");
     let encryptedText = Buffer.from(text.encryptedData, "hex");
     let decipher = crypto.createDecipheriv("aes-256-cbc", Buffer.from(key), iv);

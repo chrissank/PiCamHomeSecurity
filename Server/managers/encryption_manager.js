@@ -3,15 +3,16 @@ const fs = require("fs");
 const inquirer = require("inquirer");
 const passwordFile = process.cwd() + "/../../PiCamHomeSecurityConfig/password.dat";
 
-var key = "";
+var password = "";
 try {
-    key = fs.readFileSync(passwordFile, "utf8");
+    password = fs.readFileSync(passwordFile, "utf8");
 } catch (err) {}
 
 /* Taken from https://www.tutorialspoint.com/encrypt-and-decrypt-data-in-nodejs */
 
 //Encrypting text
 module.exports.encrypt = function (text) {
+    let key = crypto.createHash("sha256").update(password).digest("base64").substring(0, 32);
     const iv = crypto.randomBytes(16);
     let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key), iv);
     let encrypted = cipher.update(text);
@@ -21,6 +22,7 @@ module.exports.encrypt = function (text) {
 
 // Decrypting text
 module.exports.decrypt = function (text) {
+    let key = crypto.createHash("sha256").update(password).digest("base64").substring(0, 32);
     let iv = Buffer.from(text.iv, "hex");
     let encryptedText = Buffer.from(text.encryptedData, "hex");
     let decipher = crypto.createDecipheriv("aes-256-cbc", Buffer.from(key), iv);
@@ -30,7 +32,7 @@ module.exports.decrypt = function (text) {
 };
 
 module.exports.initialize = async function () {
-    if (key === "") {
+    if (password === "") {
         console.log("");
         console.log("No password file found.");
         console.log("Please enter your password below. If this is the first time, please generate a password. Once selected, you cannot change your password.");
@@ -38,7 +40,7 @@ module.exports.initialize = async function () {
             "You must use the same password on ALL cameras. Please use the password you entered on any already setup cameras, or you will need to update each camera's password."
         );
 
-        key = (
+        password = (
             await inquirer.prompt({
                 prefix: "=>",
                 type: "input",
@@ -48,12 +50,12 @@ module.exports.initialize = async function () {
         ).password;
 
         try {
-            fs.writeFileSync(passwordFile, key);
+            fs.writeFileSync(passwordFile, password);
         } catch (error) {
             console.log(error);
         }
 
-        console.log("Password set: " + key);
+        console.log("Password set: " + password);
     } else {
     }
 };
