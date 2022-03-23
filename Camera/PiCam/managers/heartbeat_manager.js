@@ -1,9 +1,9 @@
-// Detects UDP heartbeats sent by the PiCamHomeSecurity server
+const dgram = require("dgram");
+const ip = require("ip");
+const encryption_manager = require("./encryption_manager");
 
-var dgram = require("dgram");
-var ip = require("ip");
-var HEARTBEAT_PORT = 41000;
-var MULTICAST_ADDRESS = "230.100.101.102";
+const HEARTBEAT_PORT = 41000;
+const MULTICAST_ADDRESS = "230.100.101.102";
 var recent = false;
 
 module.exports.createHeartbeatConnection = function () {
@@ -14,7 +14,7 @@ module.exports.createHeartbeatConnection = function () {
 
     server.on("listening", onListeningStart);
     server.on("message", async function (message, info) {
-        await onMessage(message, info);
+        await onMessage(encryption_manager.decrypt(message), info);
     });
     server.on("error", onError);
     server.on("close", onClose);
@@ -28,7 +28,7 @@ module.exports.createHeartbeatConnection = function () {
 
 // local functions, no need to export them.
 async function onListeningStart() {
-    var address = server.address();
+    const address = server.address();
     console.log(`HEARTBEAT LISTENER CONNECTED: ${address.address}:${address.port}`);
     console.log("\n");
 }
@@ -40,7 +40,7 @@ async function onMessage(message, info) {
             console.log("[HEARTBEAT] DETECTED FROM " + info.address);
 
             await require("./ip_manager").sync(info.address);
-            //await require("./command_manager")();
+            await require("./command_manager")(); // attempts to establish a TCP connection
 
             setTimeout(() => {
                 recent = false;

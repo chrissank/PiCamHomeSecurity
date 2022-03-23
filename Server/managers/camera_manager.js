@@ -3,6 +3,7 @@ const inquirer = require("inquirer");
 const configPath = process.cwd() + "/../../PiCamHomeSecurityConfig";
 const camerasPath = configPath + "/cameras.json";
 const {Form, Input} = require("enquirer");
+var cameras;
 
 const addCameraQuestion = new Form({
     name: "camera",
@@ -15,25 +16,28 @@ const addCameraQuestion = new Form({
     prefix: state => "=>",
 });
 
-module.exports.getCameras = async function () {
-    var cameras = [];
-    try {
-        cameras = JSON.parse(await fs.readFile(camerasPath));
-    } catch (error) {
-        console.log("Error countered. PiCamHomeSecurityConfig/cameras.json is missing.");
-
-        // try to create it, if it fails, who cares, we already notified that the file is missing.
+module.exports.getCameras = async function (reload = false) {
+    if (reload || cameras === undefined) {
         try {
-            await fs.mkdir(configPath);
-        } catch (error) {}
+            cameras = JSON.parse(await fs.readFile(camerasPath));
+        } catch (error) {
+            console.log("Error countered. PiCamHomeSecurityConfig/cameras.json is missing.");
+
+            // try to create it, if it fails, who cares, we already notified that the file is missing.
+            try {
+                await fs.mkdir(configPath);
+            } catch (error) {}
+        }
     }
     return cameras;
 };
 
 module.exports.addCamera = async function () {
     let newCamera = await addCameraQuestion.run();
-
     let cameras = await this.getCameras();
+
+    newCamera.number = cameras.length() + 1;
+
     cameras.push(newCamera);
 
     try {
@@ -43,4 +47,45 @@ module.exports.addCamera = async function () {
     }
 
     console.log("[Camera Manager] Camera added");
+};
+
+module.exports.selectCamera = async function () {
+    let camChoices = [];
+
+    for (cam of await this.getCameras()) {
+        let choice = "";
+        if (cam.title) {
+            choice += cam.title + " camera";
+        } else {
+            choice += "Camera" + cam.number;
+        }
+        camChoices.push(choice);
+    }
+
+    camChoices.push("Cancel");
+
+    var choice = (
+        await inquirer.prompt({
+            prefix: "=>",
+            type: "list",
+            name: "cam",
+            message: "What camera you like to select?",
+            choices: camChoices,
+        })
+    ).cam;
+
+    if (choice === "Cancel") {
+        return undefined;
+    } else {
+        return cameras[camChoices.indexOf(choice)];
+    }
+};
+
+module.exports.viewCameras = async function () {
+    let camera = await this.selectCamera();
+
+    if (camera) {
+        await require("./mpv_manager").viewCamera(cam);
+    } else {
+    }
 };

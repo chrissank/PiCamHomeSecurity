@@ -1,8 +1,9 @@
-var dgram = require("dgram");
-var ip = require("ip");
+const dgram = require("dgram");
+const ip = require("ip");
+const encryption_manager = require("./encryption_manager");
 
-var HEARTBEAT_PORT = 41000;
-var MULTICAST_ADDRESS = "230.100.101.102";
+const HEARTBEAT_PORT = 41000;
+const MULTICAST_ADDRESS = "230.100.101.102";
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 module.exports.sendHeartbeat = async function () {
