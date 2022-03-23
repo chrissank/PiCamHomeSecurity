@@ -1,9 +1,6 @@
-//require("./ipsync");
-
 const {Server} = require("net");
-var fs = require("fs");
-
-var cameras = await require("./camera_manager").getCameras();
+const fs = require("fs");
+const encryption_manager = require("./encryption_manager");
 
 // Creates and manages a TCP connection.
 function createTCPConnection(camera) {
@@ -39,7 +36,7 @@ function createTCPConnection(camera) {
     return socketPromise;
 }
 
-module.exports.test = async function () {
-    let b = await createTCPConnection(cameras[0]);
-    b.write("boom bitch");
+module.exports.sendCommand = async function (camera, command) {
+    let conn = await createTCPConnection(camera);
+    conn.write(encryption_manager.encrypt(command));
 };
