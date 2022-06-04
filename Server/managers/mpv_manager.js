@@ -12,7 +12,7 @@ module.exports.viewCamera = async function (cam) {
             await mpv.rotateVideo(cam.rotation);
         }
 
-        await mpv.load(`udp://${ip.address()}:${cam.udpPort}`);
+        await mpv.load(`udp://239.0.0.1:${cam.udpPort}`);
 
         await inquirer.prompt({
             prefix: "",

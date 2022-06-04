@@ -9,8 +9,12 @@ mkdir PiCamHomeSecurityConfig
 
 cd PiCamHomeSecurityConfig
 
-read -p "Enter IP of server: " ip
+read -p "Enter IP of server (or hit enter for default): " ip
 echo $ip > ip.dat
+
+if [ "$ip" = "" ]; then
+    ip="239.0.0.1"
+fi
 
 read -p "Enter your PiCamHomeSecurity Network Password: " pw
 echo $pw > password.dat
@@ -40,6 +44,10 @@ if [ "$wantHFlip" = "y" ]; then
     CAMERA_SETTINGS="$CAMERA_SETTINGS -hf"
 fi
 
+if [ "$rotation" = "" ]; then
+    rotation="0"
+fi
+
 CAMERA_SETTINGS="$CAMERA_SETTINGS $HF -rot $rotation"
 
 echo $CAMERA_SETTINGS > camera_settings.dat
@@ -49,6 +57,8 @@ NIGHT_SETTINGS="-br $nightBrightness"
 echo $NIGHT_SETTINGS > night_settings.dat
 
 cd ../PiCamHomeSecurity/Camera/PiCam
+
+sudo apt-get install npm
 
 npm install
 
