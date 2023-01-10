@@ -53,8 +53,11 @@ cd ../PiCamHomeSecurity/Camera/
 
 sudo apt-get install npm
 
-sudo npm install inkjet -g
-sudo npm install fs -g
+cd Scripts/brightness
+
+npm install
+
+cd ../..
 
 chmod u+x Scripts/picam.sh
 chmod u+x Scripts/cleanup.sh
