@@ -49,11 +49,9 @@ NIGHT_SETTINGS="-br $nightBrightness"
 
 echo $NIGHT_SETTINGS > night_settings.dat
 
-cd ../PiCamHomeSecurity/Camera/PiCam
+cd ../PiCamHomeSecurity/Camera/
 
 sudo apt-get install npm
-
-cd ..
 
 chmod u+x Scripts/picam.sh
 chmod u+x Scripts/cleanup.sh
