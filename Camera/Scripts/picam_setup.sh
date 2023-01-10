@@ -12,13 +12,6 @@ cd PiCamHomeSecurityConfig
 read -p "Enter IP of server (or hit enter for default): " ip
 echo $ip > ip.dat
 
-if [ "$ip" = "" ]; then
-    ip="239.0.0.1"
-fi
-
-read -p "Enter your PiCamHomeSecurity Network Password: " pw
-echo $pw > password.dat
-
 read -p "Enter the SERVER port you are STREAMING to (e.g. 411XX): " s_port
 echo $s_port > stream_port.dat
 
