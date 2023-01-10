@@ -58,9 +58,9 @@ SUCC="succeeded"
 #    - rot = rotation (0-360deg)
 #    - br = brightness (0-100, for night viewing)
 
-if [ "$CONN" == *"$SUCC"*]; then
+if [[ "$CONN" == *"$SUCC"* ]]; then
     raspivid -t 0 -w 1920 -h 1080 -a 12 -fps 30 -b 5000000 $ADDITIONAL_SETTINGS -ih -g 90 -o - | tee $VIDEO_FILE | ffmpeg -thread_queue_size 4096 -i - -f lavfi -i anullsrc -c:v copy -f flv rtmp://$IP:$PORT$ENDPOINT
 else
     raspivid -t 0 -w 1920 -h 1080 -a 12 -fps 30 -b 5000000 $ADDITIONAL_SETTINGS -ih -g 90 -o $VIDEO_FILE 
-fi  
-#end
+fi
+
