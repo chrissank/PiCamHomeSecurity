@@ -24,7 +24,7 @@ IP=`cat /home/pi/Documents/PiCamHomeSecurityConfig/ip.dat`
 PORT=`cat /home/pi/Documents/PiCamHomeSecurityConfig/stream_port.dat`
 
 # Sample video name: picam-06-05T16:07:49.h264
-VIDEO_FILE="/home/pi/Documents/PiCamHomeSecurityFootage/picam-$NOW.h264"
+VIDEO_FILE="/home/pi/Documents/PiCamHomeSecurityFootage/footage-$NOW.h264"
 
 # Sample video name: picam-06-05T16:07:49.h264
 ENDPOINT=`cat /home/pi/Documents/PiCamHomeSecurityConfig/endpoint.dat`
