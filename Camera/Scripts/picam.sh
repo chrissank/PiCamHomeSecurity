@@ -38,6 +38,10 @@ if [ "$MODE" = "dark" ]; then
     ADDITIONAL_SETTINGS="$ADDITIONAL_SETTINGS $NIGHT_SETTINGS"
 fi
 
+CONN=$(nc -z 192.168.0.200 1935)
+
+echo $CONN
+
 # raspivid = command to start the video
 # -t 0 = sets the video duration to infinite
 # -fl = flush buffer after writing (reduce latency)

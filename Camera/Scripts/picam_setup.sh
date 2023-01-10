@@ -52,6 +52,7 @@ echo $NIGHT_SETTINGS > night_settings.dat
 cd ../PiCamHomeSecurity/Camera/
 
 sudo apt-get install npm
+sudo apt-get install netcat
 
 cd Scripts/brightness
 
