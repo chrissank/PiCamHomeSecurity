@@ -22,8 +22,8 @@ echo $pw > password.dat
 read -p "Enter the SERVER port you are STREAMING to (e.g. 411XX): " s_port
 echo $s_port > stream_port.dat
 
-read -p "Enter the SERVER port you are COMMUNICATING through (e.g. 412XX): " c_port
-echo $c_port > communication_port.dat
+read -p "Enter the SERVER endpoint you are STREAMING to (e.g. 412XX): " c_port
+echo $c_port > endpoint.dat
 
 read -p "Vertical flip? (y/n) " wantVFlip
 read -p "Horizontal flip? (y/n) " wantHFlip
@@ -60,16 +60,15 @@ cd ../PiCamHomeSecurity/Camera/PiCam
 
 sudo apt-get install npm
 
-npm install
+npm install inkjeg -g
+npm install fs -g
 
 cd ..
 
 chmod u+x Scripts/picam.sh
 chmod u+x Scripts/cleanup.sh
 sudo cp Services/picam.service /etc/systemd/system/
-sudo cp Services/picam-camera.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable picam.service
 sudo systemctl enable picam-camera.service
 
 (crontab -l 2>/dev/null; echo "0 1 * * * /home/pi/Documents/PiCamHomeSecurity/Camera/Scripts/cleanup.sh") | crontab -

@@ -6,7 +6,7 @@
 raspistill -w 1920 -h 1080 -o "/home/pi/Documents/PiCamHomeSecurityFootage/brightness.png"
 
 # Average brightness, set mode file
-node "/home/pi/Documents/PiCamHomeSecurity/Camera/PiCam/managers/brightness_manager.js"
+node "/home/pi/Documents/PiCamHomeSecurity/Camera/Scripts/brightness_manager.js"
 
 # Wait for script to finish
 sleep 5
@@ -25,6 +25,9 @@ PORT=`cat /home/pi/Documents/PiCamHomeSecurityConfig/stream_port.dat`
 
 # Sample video name: picam-06-05T16:07:49.h264
 VIDEO_FILE="/home/pi/Documents/PiCamHomeSecurityFootage/picam-$NOW.h264"
+
+# Sample video name: picam-06-05T16:07:49.h264
+ENDPOINT=`cat /home/pi/Documents/PiCamHomeSecurityConfig/endpoint.dat`
 
 # Camera specific settings such as rotation, gamma, saturation, etc., as received from the config
 ADDITIONAL_SETTINGS=`cat /home/pi/Documents/PiCamHomeSecurityConfig/camera_settings.dat`
@@ -51,6 +54,6 @@ fi
 #    - vf, hf = vertical or horizontal flip
 #    - rot = rotation (0-360deg)
 #    - br = brightness (0-100, for night viewing)
-raspivid -t 0 -w 1920 -h 1080 -a 12 -fps 30 -b 5000000 $ADDITIONAL_SETTINGS -ih -g 90 -o - | tee $VIDEO_FILE | ffmpeg -thread_queue_size 4096 -i - -f lavfi -i anullsrc -c:v copy -f h264 udp://$IP:$PORT
+raspivid -t 0 -w 1920 -h 1080 -a 12 -fps 30 -b 5000000 $ADDITIONAL_SETTINGS -ih -g 90 -o - | tee $VIDEO_FILE | ffmpeg -thread_queue_size 4096 -i - -f lavfi -i anullsrc -c:v copy -f flv rtmp://$IP:$PORT$ENDPOINT
 
 #end
