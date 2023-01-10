@@ -38,9 +38,8 @@ if [ "$MODE" = "dark" ]; then
     ADDITIONAL_SETTINGS="$ADDITIONAL_SETTINGS $NIGHT_SETTINGS"
 fi
 
-CONN=$(nc -z 192.168.0.200 1935)
-
-echo $CONN
+CONN=$(nc -z -v -w5 192.168.0.200 1935)
+SUCC="succeeded"
 
 # raspivid = command to start the video
 # -t 0 = sets the video duration to infinite
@@ -58,6 +57,10 @@ echo $CONN
 #    - vf, hf = vertical or horizontal flip
 #    - rot = rotation (0-360deg)
 #    - br = brightness (0-100, for night viewing)
-raspivid -t 0 -w 1920 -h 1080 -a 12 -fps 30 -b 5000000 $ADDITIONAL_SETTINGS -ih -g 90 -o - | tee $VIDEO_FILE | ffmpeg -thread_queue_size 4096 -i - -f lavfi -i anullsrc -c:v copy -f flv rtmp://$IP:$PORT$ENDPOINT
 
+if [[ "$CONN" == *"$SUCC"*]]
+    raspivid -t 0 -w 1920 -h 1080 -a 12 -fps 30 -b 5000000 $ADDITIONAL_SETTINGS -ih -g 90 -o - | tee $VIDEO_FILE | ffmpeg -thread_queue_size 4096 -i - -f lavfi -i anullsrc -c:v copy -f flv rtmp://$IP:$PORT$ENDPOINT
+then
+    raspivid -t 0 -w 1920 -h 1080 -a 12 -fps 30 -b 5000000 $ADDITIONAL_SETTINGS -ih -g 90 -o $VIDEO_FILE 
+fi  
 #end
