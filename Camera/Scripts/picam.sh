@@ -38,7 +38,7 @@ if [ "$MODE" = "dark" ]; then
     ADDITIONAL_SETTINGS="$ADDITIONAL_SETTINGS $NIGHT_SETTINGS"
 fi
 
-CONN=$(nc -z -v -w5 192.168.0.200 1935)
+CONN=$(nc -z -v -w5 $IP $PORT)
 SUCC="succeeded"
 
 # raspivid = command to start the video
@@ -52,15 +52,17 @@ SUCC="succeeded"
 # -f lavfi -i anullsrc = sets audio to silence
 # -c:v copy = skip re-encoding the h264 stream, just copy it
 # -f h264 = set output format to h264
-# udp://$IP:PORT = output URL for the UDP stream
+# rtmp://$IP:PORT = output URL for the rtmp stream
 # SOMETIMES:
 #    - vf, hf = vertical or horizontal flip
 #    - rot = rotation (0-360deg)
 #    - br = brightness (0-100, for night viewing)
 
 if [[ "$CONN" == *"$SUCC"* ]]; then
+    echo "Running with streaming"
     raspivid -t 0 -w 1920 -h 1080 -a 12 -fps 30 -b 5000000 $ADDITIONAL_SETTINGS -ih -g 90 -o - | tee $VIDEO_FILE | ffmpeg -thread_queue_size 4096 -i - -f lavfi -i anullsrc -c:v copy -f flv rtmp://$IP:$PORT$ENDPOINT
 else
+    echo "Running without streaming"
     raspivid -t 0 -w 1920 -h 1080 -a 12 -fps 30 -b 5000000 $ADDITIONAL_SETTINGS -ih -g 90 -o $VIDEO_FILE 
 fi
 

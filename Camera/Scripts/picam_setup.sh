@@ -10,13 +10,21 @@ mkdir PiCamHomeSecurityConfig
 cd PiCamHomeSecurityConfig
 
 read -p "Enter IP of server (or hit enter for default): " ip
-echo $ip > ip.dat
+
+if [ "$ip" != "" ]; then
+    echo $ip > ip.dat
+fi
 
 read -p "Enter the SERVER port you are STREAMING to (e.g. 411XX): " s_port
-echo $s_port > stream_port.dat
+
+if [ "$stream_port" != "" ]; then
+    echo $s_port > stream_port.dat
+fi
 
 read -p "Enter the SERVER endpoint you are STREAMING to (e.g. /stream/name): " endpoint
-echo $endpoint > endpoint.dat
+if [ "$endpoint" != "" ]; then
+    echo $endpoint > endpoint.dat
+fi
 
 read -p "Vertical flip? (y/n) " wantVFlip
 read -p "Horizontal flip? (y/n) " wantHFlip
