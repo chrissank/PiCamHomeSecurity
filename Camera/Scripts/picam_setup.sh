@@ -15,8 +15,8 @@ echo $ip > ip.dat
 read -p "Enter the SERVER port you are STREAMING to (e.g. 411XX): " s_port
 echo $s_port > stream_port.dat
 
-read -p "Enter the SERVER endpoint you are STREAMING to (e.g. 412XX): " c_port
-echo $c_port > endpoint.dat
+read -p "Enter the SERVER endpoint you are STREAMING to (e.g. /stream/name): " endpoint
+echo $endpoint > endpoint.dat
 
 read -p "Vertical flip? (y/n) " wantVFlip
 read -p "Horizontal flip? (y/n) " wantHFlip
@@ -55,7 +55,7 @@ sudo apt-get install npm
 
 chmod u+x Scripts/picam.sh
 chmod u+x Scripts/cleanup.sh
-sudo cp Services/picam.service /etc/systemd/system/
+sudo cp Services/picam-camera.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable picam-camera.service
 
