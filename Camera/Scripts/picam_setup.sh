@@ -53,9 +53,6 @@ cd ../PiCamHomeSecurity/Camera/PiCam
 
 sudo apt-get install npm
 
-npm install inkjeg -g
-npm install fs -g
-
 cd ..
 
 chmod u+x Scripts/picam.sh
