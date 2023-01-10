@@ -6,7 +6,7 @@
 raspistill -w 1920 -h 1080 -o "/home/pi/Documents/PiCamHomeSecurityFootage/brightness.png"
 
 # Average brightness, set mode file
-node "/home/pi/Documents/PiCamHomeSecurity/Camera/Scripts/brightness_manager.js"
+node "/home/pi/Documents/PiCamHomeSecurity/Camera/Scripts/brightness/index.js"
 
 # Wait for script to finish
 sleep 5
