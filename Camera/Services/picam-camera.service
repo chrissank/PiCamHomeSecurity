@@ -4,15 +4,15 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-ExecStartPre=/bin/sleep 30
+ExecStartPre=/bin/sleep 2
 ExecStart=/home/pi/Documents/PiCamHomeSecurity/Camera/Scripts/picam.sh
 WorkingDirectory=/home/pi/Documents/PiCamHomeSecurity/Camera/Scripts
 StandardOutput=inherit
 StandardError=inherit
 Restart=on-failure
-RestartSec=5s
+RestartSec=1s
 User=pi
-RuntimeMaxSec=1800
+RuntimeMaxSec=300
 
 [Install]
 WantedBy=default.target

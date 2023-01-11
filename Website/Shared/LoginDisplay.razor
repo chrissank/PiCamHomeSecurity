@@ -1,0 +1,15 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <AuthorizeView Context=Inner1 Roles="Admin">
+            <a href="/admin">Admin Panel</a>
+        </AuthorizeView>
+        <a href="/">@context.User.Identity?.Name</a>
+        <div class="mx-2"></div>
+        <form method="post" action="logout">
+            <button type="submit" class="nav-link btn btn-link">Log out</button>
+        </form>
+    </Authorized>
+    <NotAuthorized>
+        <a href="login">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>

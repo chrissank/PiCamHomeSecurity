@@ -1,0 +1,49 @@
+﻿@page "/admin"
+@attribute [Authorize(Roles = "Admin")]
+@using DataAccessLayer.Models
+@using DataAccessLayer.Services
+@inject NavigationManager NavigationManager
+@inject AppUserService AppUserService
+
+<PageTitle>PiCamHomeSecurity Admin</PageTitle>
+<div class="row">
+    <div class="col-md-4">
+        <RadzenTemplateForm Data="@NewAppUser" Submit="@((AppUser args) => { HandleValidSubmit(args); })">
+            <RadzenFieldset Text="New User">
+                <div class="row">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="UserName" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenTextBox style="width: 100%;" class="" Name="UserName" @bind-Value="NewAppUser.UserName" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Password" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenTextBox style="width: 100%;" Name="Password" @bind-Value="NewAppUserPassword" />
+                    </div>
+                </div>
+                <RadzenButton ButtonType="ButtonType.Submit" class="mt-3" ButtonStyle="ButtonStyle.Success" Icon="save" Text="Create" />
+            </RadzenFieldset>
+        </RadzenTemplateForm>
+    </div>
+
+</div>
+
+@code {
+    public AppUser NewAppUser { get; set; } = new AppUser();
+
+    public string NewAppUserPassword { get; set; }
+
+    [Authorize(Roles = "Admin")]
+    private async void HandleValidSubmit(AppUser op)
+    {
+        op.DisplayName = op.UserName;
+        await AppUserService.CreateAppUser(op, NewAppUserPassword);
+    }
+
+
+}

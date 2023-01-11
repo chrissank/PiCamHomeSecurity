@@ -9,7 +9,7 @@ raspistill -w 1920 -h 1080 -o "/home/pi/Documents/PiCamHomeSecurityFootage/brigh
 node "/home/pi/Documents/PiCamHomeSecurity/Camera/Scripts/brightness/index.js"
 
 # Wait for script to finish
-sleep 5
+sleep 3
 
 # Read mode in
 MODE=`cat /home/pi/Documents/PiCamHomeSecurityConfig/mode.dat`

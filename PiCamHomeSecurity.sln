@@ -1,0 +1,76 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Website", "Website\Website.csproj", "{47C1C860-034D-4FC1-913F-A4E3F62BC592}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{E895D27E-1B89-4D7C-8C4D-04D6E317ECE1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{143CEE61-F101-430F-B33A-1CEAD99DFB9E}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "devops", "devops", "{EAFAF013-C7FE-4EA2-84AE-F53B6F00AA68}"
+	ProjectSection(SolutionItems) = preProject
+		devops\docker-compose.yml = devops\docker-compose.yml
+		devops\start.sh = devops\start.sh
+		devops\stop.sh = devops\stop.sh
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nginx-rtmp", "nginx-rtmp", "{BE4DA5FB-DE16-4575-96B8-A9C0884627FC}"
+	ProjectSection(SolutionItems) = preProject
+		devops\nginx-rtmp\nginx.conf = devops\nginx-rtmp\nginx.conf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Camera", "Camera", "{3EAEA81B-6F02-479B-948E-70B31A65204A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{E11D227D-D9D5-4E59-9AD8-8D43F6E757CB}"
+	ProjectSection(SolutionItems) = preProject
+		Camera\Scripts\cleanup.sh = Camera\Scripts\cleanup.sh
+		Camera\Scripts\picam.sh = Camera\Scripts\picam.sh
+		Camera\Scripts\picam_setup.sh = Camera\Scripts\picam_setup.sh
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{008BA498-DABA-49D2-BAEA-C768DC55999A}"
+	ProjectSection(SolutionItems) = preProject
+		Camera\Services\picam-camera.service = Camera\Services\picam-camera.service
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "brightness", "brightness", "{3711FD5E-5C32-426F-B9AC-2B529CAE77C3}"
+	ProjectSection(SolutionItems) = preProject
+		Camera\Scripts\brightness\index.js = Camera\Scripts\brightness\index.js
+		Camera\Scripts\brightness\package-lock.json = Camera\Scripts\brightness\package-lock.json
+		Camera\Scripts\brightness\package.json = Camera\Scripts\brightness\package.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47C1C860-034D-4FC1-913F-A4E3F62BC592}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47C1C860-034D-4FC1-913F-A4E3F62BC592}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47C1C860-034D-4FC1-913F-A4E3F62BC592}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47C1C860-034D-4FC1-913F-A4E3F62BC592}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E895D27E-1B89-4D7C-8C4D-04D6E317ECE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E895D27E-1B89-4D7C-8C4D-04D6E317ECE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E895D27E-1B89-4D7C-8C4D-04D6E317ECE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E895D27E-1B89-4D7C-8C4D-04D6E317ECE1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BE4DA5FB-DE16-4575-96B8-A9C0884627FC} = {EAFAF013-C7FE-4EA2-84AE-F53B6F00AA68}
+		{E11D227D-D9D5-4E59-9AD8-8D43F6E757CB} = {3EAEA81B-6F02-479B-948E-70B31A65204A}
+		{008BA498-DABA-49D2-BAEA-C768DC55999A} = {3EAEA81B-6F02-479B-948E-70B31A65204A}
+		{3711FD5E-5C32-426F-B9AC-2B529CAE77C3} = {E11D227D-D9D5-4E59-9AD8-8D43F6E757CB}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D904490F-18D3-4C60-8910-67150C69AAD1}
+	EndGlobalSection
+EndGlobal

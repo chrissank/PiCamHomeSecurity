@@ -1,0 +1,49 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+@inject IJSRuntime _js
+@inject IConfiguration Configuration
+@inject IAuthorizationService AuthorizationService
+
+<PageTitle>PiCamHomeSecurity</PageTitle>
+
+<Animate Animation="Animations.Fade" Duration="TimeSpan.FromSeconds(2)" DelayMs="200">
+    <div class="text-center floating mt-1 mb-4">
+        <h1 class="display-1">Hello!</h1>
+        <p class="lead col-md-6 mx-auto">
+            Welcome to PiCamHomeSecurity <br />
+            <AuthorizeView>
+                <NotAuthorized>
+                    <p class="lead col-md-6 mx-auto">
+                        Login for access
+                    </p>
+                </NotAuthorized>
+            </AuthorizeView>
+        </p>
+    </div>
+</Animate>
+
+<hr />
+<AuthorizeView>
+    <p class="lead">
+        Security Cam 1
+    </p>
+    <video-js id="cameraId" autoplay controls preload="auto" width="auto" height="auto" poster="null" muted class="vjs-16-9">
+        <source src="" type="application/x-mpegURL">
+    </video-js>
+</AuthorizeView>
+
+@code {
+    [CascadingParameter]    
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            await _js.InvokeVoidAsync("createSecurityCam", "cameraId", Configuration["SecurityCamera1"], Configuration["SecurityCamera1PW"]);
+        }
+    }
+}
