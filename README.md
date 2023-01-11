@@ -13,7 +13,7 @@ The docker compose script creates three docker containers:
 
 A kestrel + postgres webserver backend is used as this is an excerpt from a larger more complete home automation website (where a database, user accounts, etc. is needed). In this case, it is supplied as an example, however a simple staticly served nginx page should do as long as the right content is included (see below)
 
-The nginx-rtmp container runs a script allowing for an RTMP stream to be transcoded into an HLS (HTTP Live Streaming) protocol to be displayed on all browsers (configured in `nginx.conf`).
+The nginx-rtmp container runs a script allowing for an RTMP stream to be transcoded into an HLS (HTTP Live Streaming) protocol to be displayed on all browsers (configured in `nginx.conf`). It could be used to do streaming from other sources too.
 
 The backend requires a few ports to be open on LAN to function:
 
